@@ -2,41 +2,51 @@
 //
 
 #include <iostream>
-#include"polynomial.h"
+#include "polynomial.h"
 using namespace std;
-int main() {
-	int coeff;
 
-	cout << "Enter the degree of Coefficient for polynomial 1?" << endl;
-	cin >> coeff;
-	Polynomial poly_1(coeff);
-	cin >> poly_1;
+int main()
+{
+    int degree;
 
-	cout << "Enter the degree of Coefficient for polynomial 2?" << endl;
-	cin >> coeff;
-	Polynomial poly_2(coeff);
-	cin >> poly_2;
-	cout << endl;
+    // Polynomial 1
+    cout << "Enter the degree of polynomial 1: ";
+    cin >> degree;
+    Polynomial poly1(degree);
+    poly1.input();
 
-	cout << "Polynomial 1 = " << poly_1 << endl;
-	cout << "Polynomial 2 = " << poly_2 << endl;
+    // Polynomial 2
+    cout << "Enter the degree of polynomial 2: ";
+    cin >> degree;
+    Polynomial poly2(degree);
+    poly2.input();
 
-	cout << "Test cases for operator+ and operator- " << endl;
-	cout << endl << "Polynomial 1 + Polynomial 2  is = " << poly_1 + poly_2 << endl;
+    cout << "\nPolynomial 1 = ";
+    poly1.display();
 
-	cout << "Polynomial 1 - Polynomial 2 is  = " << poly_1 - poly_2 << endl;
+    cout << "Polynomial 2 = ";
+    poly2.display();
 
-	cout << "Testing for operator == ";
-	if (poly_1 == poly_2)
-	{
-		cout << "polynomials are the same." << endl;
-	}
-	else
-	{
-		cout << " polynomials are different." << endl;
-	}
-	return 0;
+    // Addition
+    cout << "\nPolynomial 1 + Polynomial 2 = ";
+    Polynomial sum = poly1 + poly2;
+    sum.display();
+
+    // Subtraction
+    cout << "Polynomial 1 - Polynomial 2 = ";
+    Polynomial diff = poly1 - poly2;
+    diff.display();
+
+    // Equality check
+    cout << "\nChecking equality: ";
+    if (poly1 == poly2)
+        cout << "Polynomials are equal." << endl;
+    else
+        cout << "Polynomials are different." << endl;
+
+    return 0;
 }
+
 
 
 

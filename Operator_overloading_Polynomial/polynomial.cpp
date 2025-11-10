@@ -1,119 +1,147 @@
-#include"polynomial.h"
-#include<iostream>
+#include "polynomial.h"
+#include <iostream>
+#include <algorithm>
 using namespace std;
-//default constructor
 
-Polynomial::Polynomial() : size(defualt_poly), coeff(new int[defualt_poly])
+// Default constructor
+Polynomial::Polynomial() : size(default_poly), coeff(new int[default_poly + 1])
 {
-    for (int i = 0; i < defualt_poly; i++)
+    for (int i = 0; i <= default_poly; ++i)
         coeff[i] = 0;
 }
-//parameterized
+
+// Parameterized constructor
 Polynomial::Polynomial(int size) : size(size), coeff(new int[size + 1])
 {
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i <= size; ++i)
         coeff[i] = 0;
 }
-// COPY constructor
-Polynomial::Polynomial(const Polynomial& aPoly)
+
+// Copy constructor
+Polynomial::Polynomial(const Polynomial& other)
 {
-    *this = aPoly;
+    size = other.size;
+    coeff = new int[size + 1];
+    for (int i = 0; i <= size; ++i)
+        coeff[i] = other.coeff[i];
 }
 
-//assignment operator 
-Polynomial& Polynomial::operator=(const Polynomial& aPoly)
+// Assignment operator
+Polynomial& Polynomial::operator=(const Polynomial& other)
 {
-    size = aPoly.size;
-    delete[] coeff;
-    coeff = new int[size + 1];
-    for (int i = 0; i < size; ++i)
-        coeff[i] = aPoly.coeff[i];
+    if (this != &other)
+    {
+        delete[] coeff;
+        size = other.size;
+        coeff = new int[size + 1];
+        for (int i = 0; i <= size; ++i)
+            coeff[i] = other.coeff[i];
+    }
     return *this;
 }
 
-
-//OPERATOR OVERLOADING  EQUAL == TO
-bool Polynomial::operator==(const Polynomial& aPoly)
+// Equality
+bool Polynomial::operator==(const Polynomial& other) const
 {
-    for (int i = 0; i < defualt_poly; i++)
-        if (aPoly.coeff[i] != this->coeff[i])
-        {
+    if (size != other.size)
+        return false;
+    for (int i = 0; i <= size; ++i)
+        if (coeff[i] != other.coeff[i])
             return false;
-        }
-        else
-        {
-            return true;
-        }
+    return true;
 }
-//  addition operator overloading
-Polynomial Polynomial::operator+(const Polynomial& aPoly)
+
+// Addition
+Polynomial Polynomial::operator+(const Polynomial& other) const
 {
-    Polynomial temp;
-    temp.size = this->size > aPoly.size ? this->size : aPoly.size;
-    for (int i = 0; i <= temp.size; i++)
-        temp.coeff[i] = (i <= this->size ? this->coeff[i] : 0) + (i <= aPoly.size ? aPoly.coeff[i] : 0);
+    int maxSize = max(size, other.size);
+    Polynomial temp(maxSize);
+    for (int i = 0; i <= maxSize; ++i)
+    {
+        int a = (i <= size) ? coeff[i] : 0;
+        int b = (i <= other.size) ? other.coeff[i] : 0;
+        temp.coeff[i] = a + b;
+    }
     return temp;
 }
 
-
-//  subraction operator overloading
-Polynomial Polynomial::operator-(const Polynomial& aPoly)
+// Subtraction
+Polynomial Polynomial::operator-(const Polynomial& other) const
 {
-    Polynomial temp(*this);
-    temp -= aPoly;
+    int maxSize = max(size, other.size);
+    Polynomial temp(maxSize);
+    for (int i = 0; i <= maxSize; ++i)
+    {
+        int a = (i <= size) ? coeff[i] : 0;
+        int b = (i <= other.size) ? other.coeff[i] : 0;
+        temp.coeff[i] = a - b;
+    }
     return temp;
 }
 
-// operator overloading +=
-void Polynomial::operator+=(const Polynomial& aPoly)
+// += operator
+void Polynomial::operator+=(const Polynomial& other)
 {
-    *this = *this + aPoly;
+    *this = *this + other;
 }
 
-
-//  operator overloading -=
-void Polynomial::operator-=(const Polynomial& aPoly)
+// -= operator
+void Polynomial::operator-=(const Polynomial& other)
 {
-    this->size = this->size > aPoly.size ? this->size : aPoly.size;
-    for (int i = 0; i <= this->size; i++)
-        this->coeff[i] -= aPoly.coeff[i];
+    *this = *this - other;
 }
 
-//destructor
+// Destructor
 Polynomial::~Polynomial()
 {
-    if (coeff != nullptr)
+    delete[] coeff;
+    coeff = nullptr;
+}
+
+// Set/get coefficient
+void Polynomial::setCoeff(int degree, int value)
+{
+    if (degree <= size)
+        coeff[degree] = value;
+}
+
+int Polynomial::getCoeff(int degree) const
+{
+    if (degree <= size)
+        return coeff[degree];
+    return 0;
+}
+
+int Polynomial::getSize() const
+{
+    return size;
+}
+
+// Input polynomial from user
+void Polynomial::input()
+{
+    for (int i = size; i >= 0; --i)
     {
-        delete[] coeff;
-        coeff = nullptr;
+        cout << "Enter coefficient for degree " << i << ": ";
+        cin >> coeff[i];
     }
 }
 
-
-// << operator overloading
-ostream& operator<<(ostream& output, const Polynomial& aPoly)
+// Display polynomial
+void Polynomial::display() const
 {
-    for (int i = aPoly.size; i >= 0; i--)
+    bool first = true;
+    for (int i = size; i >= 0; --i)
     {
-        if (aPoly.coeff[i] == 0) continue;
-        if (i == aPoly.size || aPoly.coeff[i] < 0)
-            output << aPoly.coeff[i] << "X^" << i << " ";
-        else
-            output << "+ " << aPoly.coeff[i] << "X^" << i << " ";
+        int c = coeff[i];
+        if (c != 0)
+        {
+            if (!first && c > 0) cout << " + ";
+            else if (c < 0) cout << " ";
+            cout << c << "X^" << i;
+            first = false;
+        }
     }
-    output << endl;
-    return output;
+    if (first) cout << "0"; // all zero
+    cout << endl;
 }
-//>>  operator overloading
-istream& operator>>(istream& input, Polynomial& aPoly)
-{
-    int size = aPoly.size;
-    do
-    {
-        cout << "Enter Coefficient for degree " << size << " : ";
-        input >> aPoly.coeff[size];
-        size--;
-    } while (size >= 0);
-    return input;
-}
-

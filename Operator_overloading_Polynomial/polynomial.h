@@ -1,41 +1,42 @@
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
-#include<iostream>
+
+#include <iostream>
 using namespace std;
-const int defualt_poly = 10; //Default size of our dynamic coefficient array
+
+const int default_poly = 10; // Default max degree
+
 class Polynomial
 {
+private:
+    int size;      // degree of polynomial
+    int* coeff;    // coefficients array
 
 public:
-	//default constructor
-	Polynomial();
-	//parameterized constructor
-	Polynomial(int);
-	//copy constructor
-	Polynomial(const Polynomial&);
-	//assignment operator overloading
-	Polynomial& operator=(const Polynomial&);
-	//equal to operator overloading
-	bool operator==(const Polynomial&);
-	// + operator overloading
-	Polynomial operator+(const Polynomial&);
-	// - operator overloading
-	Polynomial operator-(const Polynomial&);
-	// += operator overloading
-	void operator+=(const Polynomial&);
-	// -= operator overloading
-	void operator-=(const Polynomial&);
-	//destructor
-	~Polynomial();
-	// << operator overloading
-	friend ostream& operator<<(ostream& out, const Polynomial& a);
-	// << operator overloading
-	friend istream& operator>>(istream& input, Polynomial& a);
-private:
-	//Data members
-	//size of array
-	int size;
-	//pointer to dynamic array
-	int* coeff;
+    // Constructors
+    Polynomial();
+    Polynomial(int size);
+    Polynomial(const Polynomial& other);
+
+    // Assignment
+    Polynomial& operator=(const Polynomial& other);
+
+    // Operator overloads
+    bool operator==(const Polynomial& other) const;
+    Polynomial operator+(const Polynomial& other) const;
+    Polynomial operator-(const Polynomial& other) const;
+    void operator+=(const Polynomial& other);
+    void operator-=(const Polynomial& other);
+
+    // Destructor
+    ~Polynomial();
+
+    // Member functions for input/output
+    void setCoeff(int degree, int value);
+    int getCoeff(int degree) const;
+    int getSize() const;
+    void input();       // read polynomial from user
+    void display() const; // print polynomial
 };
-#endif // POLYNOMIAL_H
+
+#endif
